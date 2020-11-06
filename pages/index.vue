@@ -2,33 +2,28 @@
   <div class="container">
     <div>
       <Logo />
-      <h1 class="title">
-        book-search
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+      <h2 class="title">
+        {{ title }}
+      </h2>
     </div>
   </div>
 </template>
-
 <script>
-export default {}
+const axios = require("axios");
+const isbn = "978-4-7741-8967-3";
+const url = "https://api.openbd.jp/v1/get?isbn=" + isbn;
+export default {
+  asyncData({ params, error }) {
+    return axios
+      .get(url)
+      .then((res) => {
+        return { title: res.data[0].summary.title };
+      })
+      .catch((e) => {
+        error({ title: e.response.status, message: "ERROR!!" });
+      });
+  },
+};
 </script>
 
 <style>
